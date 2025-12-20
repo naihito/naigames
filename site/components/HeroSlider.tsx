@@ -1,31 +1,24 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 /**
  * Heroに表示する画像一覧
  * 今後はここに追加・差し替えするだけでOK
  */
 const heroImages = [
-    {
-        src: "/hero/block-nakushi.png",
-        alt: "ブロック無くし",
-    },
-    {
-        src: "/hero/invader-nakushi.png",
-        alt: "インベーダー無くし",
-    },
-    {
-        src: "/hero/ochimono-nakushi.png",
-        alt: "落ちもの無くし",
-    },
+    { src: "/hero/block.png", alt: "ブロック無くし" },
+    { src: "/hero/invader.png", alt: "インベーダー無くし" },
+    { src: "/hero/ochimono.png", alt: "落ちもの無くし" },
 ];
+
+// 自動スライド間隔(ms)
+const AUTO_SLIDE_INTERVAL = 5000;
 
 export default function HeroSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
-
     const total = heroImages.length;
 
     const goPrev = () => {
@@ -35,6 +28,19 @@ export default function HeroSlider() {
     const goNext = () => {
         setCurrentIndex((prev) => (prev + 1) % total);
     };
+
+    /**
+     * 自動スライド
+     */
+    useEffect(() => {
+        const timer = setInterval(() => {
+            // goNext();
+            setCurrentIndex((prev) => (prev + 1) % total);
+        }, AUTO_SLIDE_INTERVAL);
+
+        // クリーンアップ
+        return () => clearInterval(timer);
+    }, [total]);
 
     return (
         <section className="bg-black">
