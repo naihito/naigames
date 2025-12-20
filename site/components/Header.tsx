@@ -6,10 +6,13 @@ import Link from "next/link";
 export default function Header() {
     return (
         <header className="w-full bg-white border-b border-gray-200">
-            <div className="mx-auto max-w-6xl flex items-center justify-between px-6 py-4">
+            <div className="mx-auto max-w-6xl px-6 py-4">
 
                 {/* ロゴ */}
-                <Link href="/">
+                <Link
+                    href="/"
+                    className="flex items-center justify-center gap-3 md:justify-start"
+                >
                     <Image
                         src="/logo.png"
                         alt="NAIGAMES Logo"
@@ -19,7 +22,7 @@ export default function Header() {
                 </Link>
 
                 {/* メニュー */}
-                <nav className="flex gap-8 text-lg font-midium text-gray-700">
+                <nav className="mt-2 flex justify-center gap-6 text-lg font-midium text-gray-700 md:mt-0 md:justify-end">
                     <Link href="/" className="hover:text-black">Home</Link>
                     <Link href="/games" className="hover:text-black">Games</Link>
                     <Link href="/about" className="hover:text-black">About</Link>

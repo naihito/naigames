@@ -44,29 +44,31 @@ export default function HeroSlider() {
 
     return (
         <section className="bg-black">
-            <div className="relative w-full h-[calc(100vh-80px)] overflow-hidden">
+            <div className="relative w-full">
 
-                {/* スライド本体 */}
-                <div
-                    className="flex h-full transition-transform duration-500 ease-out"
-                    style={{
-                        transform: `translateX(-${currentIndex * 100}%)`,
-                    }}
-                >
-                    {heroImages.map((image, index) => (
-                        <div
-                            key={index}
-                            className="relative w-full h-full flex-shrink-0"
-                        >
-                            <Image
-                                src={image.src}
-                                alt={image.alt}
-                                fill
-                                className="object-contain"
-                                priority={index === 0}
-                            />
-                        </div>
-                    ))}
+                {/* Hero画像 */}
+                <div className="relative w-full h-[55vh] md:h-[calc(100vh-80px)] overflow-hidden">
+                    <div
+                        className="flex h-full transition-transform duration-500 ease-out"
+                        style={{
+                            transform: `translateX(-${currentIndex * 100}%)`,
+                        }}
+                    >
+                        {heroImages.map((image, index) => (
+                            <div
+                                key={index}
+                                className="relative w-full h-full flex-shrink-0"
+                            >
+                                <Image
+                                    src={image.src}
+                                    alt={image.alt}
+                                    fill
+                                    className="object-contain"
+                                    priority={index === 0}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 {/* ◀︎ ボタン */}
@@ -91,31 +93,32 @@ export default function HeroSlider() {
 
                 </button>
 
-                {/* ⚫︎ ページネーション */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
-                    {heroImages.map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={() => setCurrentIndex(index)}
-                            className={`w-3 h-3 rounded-full transition ${
-                                index === currentIndex
-                                    ? "bg-pink-500"
-                                    : "bg-white/50 hover:bg-white"
-                            }`}
-                        />
-                    ))}
-                </div>
-
-                {/* CTA ボタン */}
-                <div className="absolute bottom-20 left-1/2 -translate-x-1/2">
+                {/* 黒背景エリア */}
+                <div className="bg-black py-6 flex flex-col items-center gap-4">
+                    {/* CTA ボタン */}
                     <Link
                         href="/games"
-                        className="inline-block px-10 py-4 text-lg font-semibold rounded-xl
-                        bg-pink-500 hover:bg-pink-600 transition
-                        shadow-lg shadow-pink-500/50 text-white"
+                        className="inline-block px-6 py-3 text-base font-semibold
+                        rounded-xl bg-pink-500 hover:bg-pink-600 transition
+                        shadow-lg shadow-pink-500/50 text-white whitespace-nowrap"
                     >
                         今すぐプレイ！
                     </Link>
+
+                    {/* ⚫︎ ページネーション */}
+                    <div className="flex gap-3">
+                        {heroImages.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentIndex(index)}
+                                className={`w-3 h-3 rounded-full transition ${
+                                    index === currentIndex
+                                        ? "bg-pink-500"
+                                        : "bg-white/50 hover:bg-white"
+                                }`}
+                            />
+                        ))}
+                    </div>
                 </div>
 
             </div>
