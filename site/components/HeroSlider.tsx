@@ -16,7 +16,7 @@ const RESUME_DELAY = 5000;  // 操作後に再開するまでの時間
 
 export default function HeroSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isPaused, setIsPaused] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);    // 自動スライドのON/OFFを制御
     const [resumeTimer, setResumeTimer] = useState<NodeJS.Timeout | null>(null);
 
     const total = heroImages.length;
@@ -24,24 +24,29 @@ export default function HeroSlider() {
     /** 次へ */
     const goNext = () => {
         setCurrentIndex((prev) => (prev + 1) % total);
+        pauseTemporarily();
     };
     /** 前へ */
     const goPrev = () => {
         setCurrentIndex((prev) => (prev - 1 + total) % total);
+        pauseTemporarily();
     };
 
     /** 操作時の一時停止 */
     const pauseTemporarily = (delay = RESUME_DELAY) => {
-        setIsPaused(true);
+        setIsPaused(true);  // まず停止状態へ
 
+        // すでに再開予約があればキャンセル(連打してもタイマーが増殖しない)
         if (resumeTimer) {
             clearTimeout(resumeTimer);
         }
 
+        // delay(ms)後にisPausedをfalseにして自動再開
         const timer = setTimeout(() => {
             setIsPaused(false);
         }, delay);
 
+        // タイマーIDをstateに保存して、次の操作でキャンセルできるようにする
         setResumeTimer(timer);
     };
 
@@ -49,19 +54,23 @@ export default function HeroSlider() {
      * 自動スライド(ホバー&操作対応)
      */
     useEffect(() => {
+        // 停止状態なら自動スライド用タイマーを作らない
         if (isPaused) return;
 
+        // 関数型更新を使って一定間隔で次へ
         const timer = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % total);
         }, AUTO_SLIDE_INTERVAL);
 
+        // コンポーネント再描画や停止切り替えのたびに、古いintervalを必ず破棄する
         return () => clearInterval(timer);
-    }, [isPaused, total]);
+    }, [isPaused, total]);  // 依存配列：isPausedが変わるたびに(停止/再開)、totalが変わるたびに(画像枚数が変わったら)
 
     return (
         <section className="bg-black">
             <div
                 className="relative w-full"
+                // PCでマウスが入るとホバー停止
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
             >
