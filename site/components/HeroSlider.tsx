@@ -1,14 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 
 const heroImages = [
-    { src: "/hero/block.png", alt: "ブロック無くし" },
-    { src: "/hero/invader.png", alt: "インベーダー無くし" },
-    { src: "/hero/ochimono.png", alt: "落ちもの無くし" },
+    {
+        src: "/hero/block.png",
+        alt: "ブロック無くし",
+        gameId: "block",
+    },
+    {
+        src: "/hero/invader.png",
+        alt: "インベーダー無くし",
+        gameId: "invader",
+    },
+    {
+        src: "/hero/ochimono.png",
+        alt: "落ちもの無くし",
+        gameId: "ochimono",
+    },
 ];
 
 const AUTO_SLIDE_INTERVAL = 5000;   // 自動スライド間隔(ms)
@@ -18,8 +29,28 @@ export default function HeroSlider() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);    // 自動スライドのON/OFFを制御
     const [resumeTimer, setResumeTimer] = useState<NodeJS.Timeout | null>(null);
-
+    
     const total = heroImages.length;
+    
+    /** ゲーム起動 */
+    const startGame = async () => {
+        const gameId = heroImages[currentIndex].gameId;
+        console.log("[HeroSlider] startGame clicked:", gameId);
+        
+        try {
+            const res = await fetch("/api/start-game", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ gameId }),
+            });
+
+            console.log("[HeroSlider] response:", res.status);
+            const data = await res.json().catch(() => null);
+            console.log("[HeroSlider] response body:", data);
+        } catch (e) {
+            console.error("[HeroSlider] fetch failed:", e);
+        }
+    };
 
     /** 次へ */
     const goNext = () => {
@@ -125,14 +156,14 @@ export default function HeroSlider() {
                 {/* 黒背景エリア */}
                 <div className="bg-black py-6 flex flex-col items-center gap-4">
                     {/* CTA ボタン */}
-                    <Link
-                        href="/games"
+                    <button
+                        onClick={startGame}
                         className="inline-block px-6 py-3 text-base font-semibold
                         rounded-xl bg-pink-500 hover:bg-pink-600 transition
                         shadow-lg shadow-pink-500/50 text-white whitespace-nowrap"
                     >
                         今すぐプレイ！
-                    </Link>
+                    </button>
 
                     {/* ⚫︎ ページネーション */}
                     <div className="flex gap-3">

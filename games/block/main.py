@@ -11,7 +11,26 @@ WIDTH, HEIGHT = 600, 800    # 画面サイズ(幅/高さ)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))   # ウィンドウを作成
 pygame.display.set_caption("ブロック無くし - NAIGAMES")    # ウィンドウのタイトル
 clock = pygame.time.Clock() #FPS制御専用クロック
-font = pygame.font.SysFont(None, 32)    # フォント設定
+
+# ==================================================
+# フォント
+# ==================================================
+
+font = pygame.font.SysFont(None, 32)    # 標準フォント
+title_font = pygame.font.SysFont(None, 72)  # タイトル表示用フォント
+sub_font = pygame.font.SysFont(None, 28)    # サブフォント
+
+# ==================================================
+# ゲーム状態(Enum)
+# ==================================================
+class GameState(Enum):
+    TITLE = auto()
+    PLAYING = auto()
+    PAUSE = auto()
+    CLEAR = auto()
+    GAME_OVER = auto()
+
+game_state = GameState.TITLE
 
 # ==================================================
 # パドル設定
@@ -45,47 +64,41 @@ BLOCK_HEIGHT = 30   # ブロック高さ
 BLOCK_GAP = 10  # ブロック間の余白
 BLOCK_COLOR = (255, 100, 100)   # ブロックカラー
 
-# ==================================================
-# ブロック生成
-# ==================================================
 blocks = [] # ブロック管理用リスト
 
-start_x = 25    # 左上の基準位置(X)
-start_y = 60    # 左上の基準位置(Y)
+def create_blocks():
+    blocks.clear()
+    
+    start_x = 25    # 左上の基準位置(X)
+    start_y = 60    # 左上の基準位置(Y)
 
-# ブロック行×列でグリッド状に配置
-for row in range(BLOCK_ROWS):
-    for col in range(BLOCK_COLS):
-        block_x = start_x + col * (BLOCK_WIDTH + BLOCK_GAP)
-        block_y = start_y + row * (BLOCK_HEIGHT + BLOCK_GAP)
-        
-        block_rect = pygame.Rect(
-            block_x,
-            block_y,
-            BLOCK_WIDTH,
-            BLOCK_HEIGHT
-        )
-        blocks.append(block_rect)
+    # ブロック行×列でグリッド状に配置
+    for row in range(BLOCK_ROWS):
+        for col in range(BLOCK_COLS):
+            block_x = start_x + col * (BLOCK_WIDTH + BLOCK_GAP)
+            block_y = start_y + row * (BLOCK_HEIGHT + BLOCK_GAP)
+            
+            block_rect = pygame.Rect(
+                block_x,
+                block_y,
+                BLOCK_WIDTH,
+                BLOCK_HEIGHT
+            )
+            blocks.append(block_rect)
+
+create_blocks()
 
 # ==================================================
-# ゲーム状態
+# ステータス
 # ==================================================
-class GameState(Enum):
-    TITLE = auto()
-    PLAYING = auto()
-    PAUSE = auto()
-    CLEAR = auto()
-    GAME_OVER = auto()
-
-game_state = GameState.PLAYING
-
 MAX_LIFE = 3    # 最大残機
 life = MAX_LIFE # 現在の残機
 
+
+# ==================================================
+# リセット処理
+# ==================================================
 def reset_ball_and_paddle():
-    """
-    リセット処理
-    """
     global ball_x, ball_y, ball_dx, ball_dy, paddle_x
     ball_x = WIDTH // 2
     ball_y = HEIGHT // 2
@@ -94,10 +107,10 @@ def reset_ball_and_paddle():
     
     paddle_x = WIDTH // 2 - PADDLE_WIDTH // 2
 
+# ==================================================
+# ミス処理
+# ==================================================
 def handle_miss():
-    """
-    ミス処理
-    """
     global life, game_state
     
     life -= 1   # 残機を減らす
@@ -120,18 +133,30 @@ def handle_events() -> bool:
     :return: 終了の場合はFalse
     :rtype: bool
     """
+    global game_state, life
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return False
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                if game_state in (
+                    GameState.TITLE,
+                    GameState.CLEAR,
+                    GameState.GAME_OVER,
+                ):
+                    life = MAX_LIFE # 再スタート時に残機リセット
+                    reset_ball_and_paddle() # プレイ開始位置へ戻す
+                    create_blocks() # ブロック生成
+                    game_state = GameState.PLAYING  # ゲームスタート
+
     return True
 
 # ==================================================
-# 更新処理(ロジック)
+# 更新処理
 # ==================================================
 def update():
-    """
-    ゲーム状態の更新
-    """
     # 関数内でグローバル変数を書き換える
     global paddle_x, ball_x, ball_y, ball_dx, ball_dy
     global life, game_state
@@ -225,9 +250,6 @@ def update():
 # 描画処理
 # ==================================================
 def draw():
-    """
-    画面描画
-    """
     screen.fill((10, 10, 30))
     
     # ------------------------------
@@ -265,7 +287,28 @@ def draw():
     screen.blit(life_text, (20, 20))    # 左上に表示
 
     # ------------------------------
-    # CLEAR表示
+    # TITLE
+    # ------------------------------
+    if game_state == GameState.TITLE:
+        title_text = title_font.render(
+            "BLOCK NAKUSHI", True, (255, 255, 255)
+        )
+        sub_text = sub_font.render(
+            "PRESS SPACE TO START", True, (180, 180, 180)
+        )
+        
+        title_rect = title_text.get_rect(
+            center=(WIDTH // 2, HEIGHT // 2 - 40)
+        )
+        sub_rect = sub_text.get_rect(
+            center=(WIDTH // 2, HEIGHT // 2 + 30)
+        )
+        
+        screen.blit(title_text, title_rect)
+        screen.blit(sub_text, sub_rect)
+
+    # ------------------------------
+    # CLEAR
     # ------------------------------
     if game_state == GameState.CLEAR:
         clear_text = font.render("CLEAR!", True, (255, 255, 0))
@@ -273,7 +316,7 @@ def draw():
         screen.blit(clear_text, text_rect)
 
     # ------------------------------
-    # GAME OVER表示
+    # GAME OVER
     # ------------------------------
     if game_state == GameState.GAME_OVER:
         game_over_text = font.render("GAME OVER", True, (255, 60, 60))

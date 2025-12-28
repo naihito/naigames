@@ -1,5 +1,6 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
 
 /**
  * ゲーム一覧データ
@@ -26,6 +27,22 @@ const games = [
 ];
 
 export default function GameCollection() {
+    const startGame = async (gameId: string) => {
+        console.log("[GameCollection] start:", gameId);
+
+        try {
+            const res = await fetch("/api/start-game", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ gameId }),
+            });
+
+            console.log("[GameCollection] response:", res.status);
+        } catch (e) {
+            console.error("[GameCollection] failed:", e);
+        }
+    };
+
     return (
         <section className="bg-black py-16">
             <div className="mx-auto max-w-6xl px-4">
@@ -56,6 +73,7 @@ export default function GameCollection() {
                                     src={game.image}
                                     alt={game.title}
                                     fill
+                                    sizes="(max-width: 1024px) 100vw, 33vw"
                                     className="object-contain p-4"
                                 />
                             </div>
@@ -70,14 +88,14 @@ export default function GameCollection() {
                                     {game.description}
                                 </p>
 
-                                <Link
-                                    href={`/games/$game.id`}
+                                <button
+                                    onClick={() => startGame(game.id)}
                                     className="inline-block w-full text-center
                                     rounded-lg bg-pink-500 hover:bg-pink-600
                                     py-2 text-sm font-semibold transition"
                                 >
                                     今すぐプレイ！
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     ))}
