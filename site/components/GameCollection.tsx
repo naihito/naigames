@@ -44,7 +44,7 @@ export default function GameCollection() {
     };
 
     return (
-        <section className="bg-black py-16">
+        <section id="games" className="bg-black py-16">
             <div className="mx-auto max-w-6xl px-4">
 
                 {/* セクションタイトル */}
