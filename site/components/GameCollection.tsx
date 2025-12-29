@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 /**
  * ゲーム一覧データ
@@ -10,39 +11,23 @@ const games = [
         id: "block",
         title: "ブロック無くし",
         description: "ブロックを崩して無くすゲーム",
-        image: "/games/block.png",
+        image: "/games/block/thumbnail.png",
     },
     {
         id: "invader",
         title: "インベーダー無くし",
         description: "インベーダーを撃って無くすゲーム",
-        image: "/games/invader.png",
+        image: "/games/invader/thumbnail.png",
     },
     {
         id: "ochimono",
         title: "落ちもの無くし",
         description: "落ちものを横に揃えて無くすゲーム",
-        image: "/games/ochimono.png",
+        image: "/games/ochimono/thumbnail.png",
     },
 ];
 
 export default function GameCollection() {
-    const startGame = async (gameId: string) => {
-        console.log("[GameCollection] start:", gameId);
-
-        try {
-            const res = await fetch("/api/start-game", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ gameId }),
-            });
-
-            console.log("[GameCollection] response:", res.status);
-        } catch (e) {
-            console.error("[GameCollection] failed:", e);
-        }
-    };
-
     return (
         <section id="games" className="bg-black py-16">
             <div className="mx-auto max-w-6xl px-4">
@@ -88,14 +73,14 @@ export default function GameCollection() {
                                     {game.description}
                                 </p>
 
-                                <button
-                                    onClick={() => startGame(game.id)}
-                                    className="inline-block w-full text-center
+                                <Link
+                                    href={`/games/${game.id}`}
+                                    className="block w-full text-center
                                     rounded-lg bg-pink-500 hover:bg-pink-600
                                     py-2 text-sm font-semibold transition"
                                 >
                                     今すぐプレイ！
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     ))}

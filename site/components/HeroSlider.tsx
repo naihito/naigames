@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 
@@ -8,17 +9,14 @@ const heroImages = [
     {
         src: "/hero/block.png",
         alt: "ブロック無くし",
-        gameId: "block",
     },
     {
         src: "/hero/invader.png",
         alt: "インベーダー無くし",
-        gameId: "invader",
     },
     {
         src: "/hero/ochimono.png",
         alt: "落ちもの無くし",
-        gameId: "ochimono",
     },
 ];
 
@@ -31,37 +29,6 @@ export default function HeroSlider() {
     const [resumeTimer, setResumeTimer] = useState<NodeJS.Timeout | null>(null);
     
     const total = heroImages.length;
-    
-    /** ゲーム起動 */
-    const startGame = async () => {
-        const gameId = heroImages[currentIndex].gameId;
-        console.log("[HeroSlider] startGame clicked:", gameId);
-        
-        try {
-            const res = await fetch("/api/start-game", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gameId }),
-            });
-
-            console.log("[HeroSlider] response:", res.status);
-            const data = await res.json().catch(() => null);
-            console.log("[HeroSlider] response body:", data);
-        } catch (e) {
-            console.error("[HeroSlider] fetch failed:", e);
-        }
-    };
-
-    /** 次へ */
-    const goNext = () => {
-        setCurrentIndex((prev) => (prev + 1) % total);
-        pauseTemporarily();
-    };
-    /** 前へ */
-    const goPrev = () => {
-        setCurrentIndex((prev) => (prev - 1 + total) % total);
-        pauseTemporarily();
-    };
 
     /** 操作時の一時停止 */
     const pauseTemporarily = (delay = RESUME_DELAY) => {
@@ -79,6 +46,18 @@ export default function HeroSlider() {
 
         // タイマーIDをstateに保存して、次の操作でキャンセルできるようにする
         setResumeTimer(timer);
+    };
+    
+    /** 次へ */
+    const goNext = () => {
+        setCurrentIndex((prev) => (prev + 1) % total);
+        pauseTemporarily();
+    };
+
+    /** 前へ */
+    const goPrev = () => {
+        setCurrentIndex((prev) => (prev - 1 + total) % total);
+        pauseTemporarily();
     };
 
     /**
@@ -139,7 +118,7 @@ export default function HeroSlider() {
                     w-12 h-12 rounded-full text-2xl font-bold
                     flex items-center justify-center shadow"
                 >
-
+                    ＜
                 </button>
 
                 {/* ▶︎ ボタン */}
@@ -150,20 +129,20 @@ export default function HeroSlider() {
                     w-12 h-12 rounded-full text-2xl font-bold
                     flex items-center justify-center shadow"
                 >
-
+                    ＞
                 </button>
 
                 {/* 黒背景エリア */}
                 <div className="bg-black py-6 flex flex-col items-center gap-4">
                     {/* CTA ボタン */}
-                    <button
-                        onClick={startGame}
+                    <Link
+                        href="#games"
                         className="inline-block px-6 py-3 text-base font-semibold
                         rounded-xl bg-pink-500 hover:bg-pink-600 transition
                         shadow-lg shadow-pink-500/50 text-white whitespace-nowrap"
                     >
-                        今すぐプレイ！
-                    </button>
+                        NAIGAMESのゲームで遊ぶ！
+                    </Link>
 
                     {/* ⚫︎ ページネーション */}
                     <div className="flex gap-3">
