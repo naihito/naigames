@@ -4,6 +4,8 @@ NAIGAMEは、無料でプレイできるオリジナルゲームを配信するW
 
 Web制作(Next.js / React / TypeScript)とゲーム開発(Python)の両面から
 実務レベルのスキル向上と将来的なWebサイト運営を見据えた個人開発プロジェクトです。
+当初ゲーム開発はPythonでの実装を進めましたが、Web上での動作不具合により、
+JavaScriptによる開発に急遽変更となりました。
 
 
 ## デモ
@@ -15,7 +17,7 @@ Web制作(Next.js / React / TypeScript)とゲーム開発(Python)の両面から
 
 ## プロジェクトの目的
 
-* オリジナルゲーム開発によるPythonスキル向上
+* オリジナルゲーム開発によるJavaScriptスキル向上
 * Next.js / React / TypeScriptを用いたWeb制作スキルの習得
 * GitHubを使った実務に近い開発フローの実践
 * 将来的を見据えて成果物を活用するための設計
@@ -39,8 +41,7 @@ Web制作(Next.js / React / TypeScript)とゲーム開発(Python)の両面から
 
 ### ゲーム開発
 
-* Python
-* Pygame
+* JavaScript
 
 ### 開発環境・運用
 
@@ -70,7 +71,7 @@ Hero / GameCollection / About / Contact を分離し拡張性を確保
 * [x] Game Collection 実装
 * [x] About / Contact（仮）追加
 * [ ] 各ゲームの詳細ページ
-* [ ] Python ゲームの組み込み
+* [ ] JavaScript ゲームの組み込み
 * [x] デプロイ（ConoHa）※テスト運用
 
 ## セットアップ方法
@@ -89,7 +90,7 @@ npm run dev
 ## 今後の予定
 
 * ゲーム詳細ページの実装
-* PythonゲームのWeb組み込み
+* JavaScriptゲームの開発
 * スマホ向け操作最適化
 * 本番運用
 
