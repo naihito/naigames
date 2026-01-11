@@ -23,11 +23,8 @@ export default function Footer() {
                         <a href="#games" className="hover:text-white transition">
                             Games
                         </a>
-                        <a href="#about" className="hover:text-white transition">
-                            About
-                        </a>
-                        <a href="#contact" className="hover:text-white transition">
-                            Contact
+                        <a href="#news" className="hover:text-white transition">
+                            News
                         </a>
                     </nav>
                 </div>
