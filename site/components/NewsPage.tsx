@@ -1,7 +1,7 @@
 export default function NewsPage() {
     return (
         <main id="news" className="bg-black min-h-screen py-10 px-4 text-white">
-            <h1 className="mb-10 text-center text-3xl font-bold text-white">NEWS</h1>
+            <h1 className="mb-10 text-center text-3xl font-bold text-white">News</h1>
 
             <div className="mx-auto max-w-3xl space-y-4">
                 <article className="rounded-lg border border-white/10 bg-white/5 p-4">
