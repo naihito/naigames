@@ -1,15 +1,13 @@
 import HeroSlider from "@/components/HeroSlider";
 import GameCollection from "@/components/GameCollection";
-import AboutSection from "@/components/AboutSection";
-import ContactSection from "@/components/ContactSection";
+import NewsPage from "@/components/NewsPage";
 
 export default function Home() {
   return (
     <>
       <HeroSlider />
       <GameCollection />
-      <AboutSection />
-      <ContactSection />
+      <NewsPage />
     </>
   );
 }
