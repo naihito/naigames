@@ -22,11 +22,10 @@ export default function Header() {
                 </Link>
 
                 {/* メニュー */}
-                <nav className="mt-2 flex justify-center gap-6 text-lg font-midium text-gray-700 md:mt-0 md:justify-end">
+                <nav className="mt-2 flex justify-center gap-6 text-lg font-midium text-gray-700 md:mt-0 md:justify-end md:gap-8 md:text-xl">
                     <Link href="/" className="hover:text-black">Home</Link>
                     <Link href="#games" className="hover:text-black">Games</Link>
-                    <Link href="#about" className="hover:text-black">About</Link>
-                    <Link href="#contact" className="hover:text-black">Contact</Link>                    
+                    <Link href="#news" className="hover:text-black">News</Link>
                 </nav>
 
             </div>
